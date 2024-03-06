@@ -1,22 +1,29 @@
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 
 function App() {
   return (
     <div className="App">
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="#home">CCLC Queue</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#schedule">Schedule</Nav.Link>
+            <Nav.Link href="#website">Our Website</Nav.Link>
+            <Nav.Link href="#login">Coach Login</Nav.Link>
+            <Nav.Link href="#queue">Queue</Nav.Link>
+            {/* add more links here */}
+          </Nav>
+        </Container>
+      </Navbar>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Welcome to the CCLC!</h1>
+        <Button variant="warning">Submit a question</Button>
       </header>
     </div>
   );
