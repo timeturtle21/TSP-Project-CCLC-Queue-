@@ -4,28 +4,58 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import LoginPage from './components/LoginPage';
+import React, { useState } from 'react';
+
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+
+  const handleNavClick = (page) => {
+    setCurrentPage(page);
+  };
+
+  const renderPage = (currentPage) => {
+    switch (currentPage) {
+      case 'home':
+        return (
+          <header className="App-header">
+            <h1>Welcome to the CCLC!</h1>
+            <Button variant="warning">Submit a question</Button>
+          </header>
+        );
+      case 'login':
+        return <LoginPage />;
+      default:
+        return (
+          <header className="App-header">
+            <h1>Welcome to the CCLC!</h1>
+            <Button variant="warning">Submit a question</Button>
+          </header>
+        );
+    }
+  };
+
   return (
+
     <div className="App">
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">CCLC Queue</Navbar.Brand>
+          <Navbar.Brand href="#home" onClick={() => handleNavClick('home')}>CCLC Queue</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#home" onClick={() => handleNavClick('home')}>Home</Nav.Link>
             <Nav.Link href="#schedule">Schedule</Nav.Link>
             <Nav.Link href="#website">Our Website</Nav.Link>
-            <Nav.Link href="#login">Coach Login</Nav.Link>
+            <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
             <Nav.Link href="#queue">Queue</Nav.Link>
             {/* add more links here */}
           </Nav>
         </Container>
       </Navbar>
-      <header className="App-header">
-        <h1>Welcome to the CCLC!</h1>
-        <Button variant="warning">Submit a question</Button>
-      </header>
+      {renderPage(currentPage)}
     </div>
+
+    
   );
 }
 
