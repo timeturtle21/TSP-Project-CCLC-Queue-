@@ -5,7 +5,7 @@ const LoginPage = () => {
   return (
     <div>
       <header className='App-header'>
-      <form class='card p-3 bg-light' style={{minWidth:'400px', maxHeight:'340px'}}>
+      <form class='card p-3 bg-light' style={{minWidth:'400px', minHeight:'300px'}}>
         <h1 class='p-1'>Coach Login</h1>
         <div align="left" class="form-group pb-2">
           <label for="uname" style={{ fontSize: '20px' }}>Username:</label>
