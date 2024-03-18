@@ -44,8 +44,8 @@ function App() {
           <Navbar.Brand href="#home" onClick={() => handleNavClick('home')}>CCLC Queue</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="#home" onClick={() => handleNavClick('home')}>Home</Nav.Link>
-            <Nav.Link href="#schedule">Schedule</Nav.Link>
-            <Nav.Link href="#website">Our Website</Nav.Link>
+            <Nav.Link href="https://www.mtu.edu/computing/cclc/" target="_blank">Schedule</Nav.Link>
+            <Nav.Link href="https://cslc.mtu.edu/" target="_blank">Our Website</Nav.Link>
             <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
             <Nav.Link href="#queue">Queue</Nav.Link>
             {/* add more links here */}
