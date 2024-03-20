@@ -21,7 +21,33 @@ function App() {
         return (
           <header className="App-header">
             <h1>Welcome to the CCLC!</h1>
-            <Button variant="warning">Submit a question</Button>
+            <label for="firstname">Enter Question</label> 
+                    <input 
+                        type="text"
+                        name="questionText"
+                        id="questionText"
+                        placeholder="Enter Question"
+                        
+                        />
+            <label>Type of Question</label> 
+                    <select name="select" id="select"> 
+                        <option value="" disabled selected> 
+                            Select Question type 
+                        </option> 
+                            <option value="1">Programming</option> 
+                            <option value="2">Debugging</option> 
+                            <option value="3">Projects Help</option> 
+                    </select>
+            <label>Relevant Course</label> 
+                    <select name="select" id="select"> 
+                        <option value="" disabled selected> 
+                            Select Relevant Course Number 
+                        </option> 
+                            <option value="1">CS 1121</option> 
+                            <option value="2">CS XXXX</option> 
+                            <option value="3">CS XXXX</option> 
+                    </select>                       
+            <Button variant="warning">Submit your question</Button>
           </header>
         );
       case 'login':
