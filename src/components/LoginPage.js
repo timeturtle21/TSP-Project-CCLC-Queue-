@@ -1,23 +1,70 @@
 // LoginPage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useGoogleLogin, googleLogout } from '@react-oauth/google';
+import axios from 'axios';
 
-const LoginPage = () => {
-  return (
+function AppLogin() {
+const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
+const [ profile, setProfile ] = useState(JSON.parse(localStorage.getItem('profile')) || null);
+
+const login = useGoogleLogin({
+  onSuccess: (codeResponse) => {
+    setUser(codeResponse)
+    localStorage.setItem('user', JSON.stringify(codeResponse));
+  },
+  onError: (error) => console.log('Login Failed:', error)
+});
+const logOut = () => {
+  googleLogout();
+  setProfile(null);
+  localStorage.removeItem('user');
+  localStorage.removeItem('profile');
+};
+
+useEffect(
+  () => {
+      if (user) {
+          axios
+              .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                  headers: {
+                      Authorization: `Bearer ${user.access_token}`,
+                      Accept: 'application/json'
+                  }
+              })
+              .then((res) => {
+                  setProfile(res.data);
+                  localStorage.setItem('profile', JSON.stringify(res.data));
+              })
+              .catch((err) => console.log(err));
+      }
+  },
+  [ user ]
+);
+
+return (
     <div>
       <header className='App-header'>
-      <form class='card p-3 bg-light' style={{minWidth:'400px', minHeight:'300px'}}>
-        <h1 class='p-1'>Coach Login</h1>
-        <div align="left" class="form-group pb-2">
-          <label for="uname" style={{ fontSize: '20px' }}>Username:</label>
-          <input class="form-control"  id="uname" placeholder="Enter your username"></input>
-          <label for="pword" style={{ fontSize: '20px' }}>Password:</label>
-          <input class="form-control" id="pword" type="password" placeholder="Enter your password"></input>
-          <button type="button" class="btn btn-warning btn-block mt-2" style={{ minWidth:'380px'}}>Login</button>
+      {profile ? (
+        <form className='card p-3 bg-light' style={{minWidth:'300px', minHeight:'200px'}}>
+          <h1 className='p-1'>Coach Logged In</h1>
+          <div align="left" className="form-group pb-2 text-center" style={{ marginTop: '25px' }}>
+              <img src={profile.picture} alt="user" />
+              <p style={{ marginTop: '15px' }}>Name: {profile.name}</p>
+              <p>Email Address: {profile.email}</p>
+              <button type="button" onClick={logOut} className="btn btn-warning btn-block mt-10" style={{ minWidth:'100px'}}>Logout</button>
+          </div>
+        </form>
+      ) :
+      <form className='card p-3 bg-light' style={{minWidth:'300px', minHeight:'200px'}}>
+        <h1 className='p-1'>Coach Login</h1>
+        <div align="left" className="form-group pb-2 text-center" style={{ marginTop: '25px' }}>
+          <button type="button" onClick={login} className="btn btn-warning btn-block mt-10" style={{ minWidth:'100px'}}>Login</button>
         </div>
       </form>
+      }
       </header>
     </div>
   );
-};
 
-export default LoginPage;
+}
+export default AppLogin;
