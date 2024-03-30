@@ -6,7 +6,7 @@ import axios from 'axios';
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
 const [ profile, setProfile ] = useState(JSON.parse(localStorage.getItem('profile')) || null);
-const coaches = ['msmille3@mtu.edu', 'kmstrick@mtu.edu'];
+const coaches = ['msmille3@mtu.edu', 'xckaira@gmail.com'];
 
 const login = useGoogleLogin({
   onSuccess: (codeResponse) => {
