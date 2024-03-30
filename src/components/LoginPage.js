@@ -6,6 +6,7 @@ import axios from 'axios';
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
 const [ profile, setProfile ] = useState(JSON.parse(localStorage.getItem('profile')) || null);
+const coaches = ['msmille3@mtu.edu', 'kmstrick@mtu.edu'];
 
 const login = useGoogleLogin({
   onSuccess: (codeResponse) => {
@@ -24,18 +25,22 @@ const logOut = () => {
 useEffect(
   () => {
       if (user) {
-          axios
-              .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-                  headers: {
-                      Authorization: `Bearer ${user.access_token}`,
-                      Accept: 'application/json'
-                  }
-              })
-              .then((res) => {
-                  setProfile(res.data);
-                  localStorage.setItem('profile', JSON.stringify(res.data));
-              })
-              .catch((err) => console.log(err));
+          axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: 'application/json'
+            }
+      })
+      .then((res) => {
+        if(coaches.includes(res.data.email)){
+          setProfile(res.data);
+          localStorage.setItem('profile', JSON.stringify(res.data));
+        }
+        else{
+          logOut(); //fail
+        }
+      })
+      .catch((err) => console.log(err));
       }
   },
   [ user ]
