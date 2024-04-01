@@ -7,15 +7,12 @@ import './QuestionForm.css';
 
 const QuestionForm = () => {
 
-    function handleClick() {
-        alert('Question Submitted!');
-        
-      };
+   
 
     return(
         <div>
             
-            <header className="App-header">
+            <form onSubmit={() => alert('Submitting!')}>
                 <h1>Welcome to the CCLC!</h1>
                 <label for="question">Enter Question</label> 
                     <input 
@@ -47,9 +44,9 @@ const QuestionForm = () => {
                             <option value="3">Other</option> 
                     </select>    
 
-                <Button variant="warning" onClick={handleClick}>Submit your question</Button>
+                <Button variant="warning">Submit your question</Button>
                            
-            </header>
+            </form>
         </div>
     );
 };
