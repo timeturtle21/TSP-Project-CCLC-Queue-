@@ -6,6 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import LoginPage from './components/LoginPage';
 import QuestionForm from './components/QuestionForm';
+import QueueView from './components/QueueView';
 import React, { useState } from 'react';
 
 
@@ -22,6 +23,8 @@ function App() {
         return <QuestionForm />;
       case 'login':
         return <LoginPage />;
+      case 'queue':
+        return <QueueView />;
       default:
         return (
           <header className="App-header">
@@ -43,7 +46,7 @@ function App() {
             <Nav.Link href="https://www.mtu.edu/computing/cclc/" target="_blank">Schedule</Nav.Link>
             <Nav.Link href="https://cslc.mtu.edu/" target="_blank">Our Website</Nav.Link>
             <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
-            <Nav.Link href="#queue">Queue</Nav.Link>
+            <Nav.Link href="#queue" onClick={() => handleNavClick('queue')}>Queue</Nav.Link>
             {/* add more links here */}
           </Nav>
         </Container>
