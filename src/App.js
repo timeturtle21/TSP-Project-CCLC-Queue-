@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import LoginPage from './components/LoginPage';
+import QuestionForm from './components/QuestionForm';
 import React, { useState } from 'react';
 
 
@@ -18,12 +19,7 @@ function App() {
   const renderPage = (currentPage) => {
     switch (currentPage) {
       case 'home':
-        return (
-          <header className="App-header">
-            <h1>Welcome to the CCLC!</h1>
-            <Button variant="warning">Submit a question</Button>
-          </header>
-        );
+        return <QuestionForm />;
       case 'login':
         return <LoginPage />;
       default:
