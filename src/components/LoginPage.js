@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import axios from 'axios';
 
+import setLoggedIn from './QueueView';
+
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
 const [ profile, setProfile ] = useState(JSON.parse(localStorage.getItem('profile')) || null);
@@ -12,6 +14,7 @@ const login = useGoogleLogin({
   onSuccess: (codeResponse) => {
     setUser(codeResponse)
     localStorage.setItem('user', JSON.stringify(codeResponse));
+    setLoggedIn(true);
   },
   onError: (error) => console.log('Login Failed:', error)
 });
@@ -20,6 +23,7 @@ const logOut = () => {
   setProfile(null);
   localStorage.removeItem('user');
   localStorage.removeItem('profile');
+  setLoggedIn(false);
 };
 
 useEffect(

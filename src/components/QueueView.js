@@ -3,9 +3,7 @@ import Button from 'react-bootstrap/Button';
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
-
-const loggedIn = true;
+import { useState, useEffect } from 'react';
 
 const question1 = "???|Programming|CS 1111";
 const question2 = "???|Theory|CS 1131";
@@ -14,6 +12,14 @@ const question4 = "Test |Question|2|Theory|CS 1111";
 const questions = [ question1, question2, question3, question4 ]
 
 let deleteList = [];
+
+let loggedIn = true;
+
+class setLoggedIn {
+    constructor(loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+}
 
 let tableData = questions.map((question) =>
     (
