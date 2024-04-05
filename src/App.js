@@ -6,6 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import LoginPage from './components/LoginPage';
 import QuestionForm from './components/QuestionForm';
+import QueueView from './components/QueueView';
 import React, { useState } from 'react';
 
 
@@ -26,6 +27,8 @@ function App() {
         return <QuestionForm />;
       case 'login':
         return <LoginPage />;
+      case 'queue':
+        return <QueueView />;
       default:
         return (
           <header className="App-header">
@@ -41,6 +44,7 @@ function App() {
     <div className="App"> 
       <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
         <Container>
+
           <Navbar.Brand href="#home" onClick={() => handleNavClick('home')} className="m-eauto">CCLC Queue</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
           <Navbar.Collapse id="basic-navbar-nav">
