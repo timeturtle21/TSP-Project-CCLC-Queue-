@@ -7,7 +7,7 @@ import setLoggedIn from './QueueView';
 
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
-const [ profile, setProfile ] = useState(JSON.parse(localStorage.getItem('profile')) || null);
+const [ profile, setProfile ] = useState(null);
 const coaches = ['msmille3@mtu.edu', 'kmstrick@mtu.edu','clbuchan@mtu.edu','jsmultan@mtu.edu', 'tjkalkma@mtu.edu', 'jadreger@mtu.edu', 'ambaird@mtu.edu' ];
 
 const login = useGoogleLogin({

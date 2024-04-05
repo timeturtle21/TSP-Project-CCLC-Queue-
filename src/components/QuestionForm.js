@@ -2,6 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import './QuestionForm.css';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 
 
@@ -83,6 +85,7 @@ const QuestionForm = () => {
             </form>
         </div>
     );
+
 };
 
 export default QuestionForm;
