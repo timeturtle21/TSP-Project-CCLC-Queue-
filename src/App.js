@@ -12,8 +12,12 @@ import React, { useState } from 'react';
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
 
+
+  const [expanded, setExpanded] = useState(false);
+
   const handleNavClick = (page) => {
     setCurrentPage(page);
+    setExpanded(false);
   };
 
   const renderPage = (currentPage) => {
@@ -34,18 +38,21 @@ function App() {
 
   return (
 
-    <div className="App">
-      <Navbar bg="dark" variant="dark" expand="lg">
+    <div className="App"> 
+      <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
         <Container>
-          <Navbar.Brand href="#home" onClick={() => handleNavClick('home')}>CCLC Queue</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#home" onClick={() => handleNavClick('home')}>Home</Nav.Link>
-            <Nav.Link href="https://www.mtu.edu/computing/cclc/" target="_blank">Schedule</Nav.Link>
-            <Nav.Link href="https://cslc.mtu.edu/" target="_blank">Our Website</Nav.Link>
-            <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
-            <Nav.Link href="#queue">Queue</Nav.Link>
-            {/* add more links here */}
-          </Nav>
+          <Navbar.Brand href="#home" onClick={() => handleNavClick('home')} className="m-eauto">CCLC Queue</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="m-eauto">
+              <Nav.Link href="#home" onClick={() => handleNavClick('home')}>Home</Nav.Link>
+              <Nav.Link href="https://www.mtu.edu/computing/cclc/" target="_blank">Schedule</Nav.Link>
+              <Nav.Link href="https://cslc.mtu.edu/" target="_blank">Our Website</Nav.Link>
+              <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
+              <Nav.Link href="#queue">Queue</Nav.Link>
+              {/* add more links here */}
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
       {renderPage(currentPage)}
