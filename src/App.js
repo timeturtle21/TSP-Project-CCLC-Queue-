@@ -53,7 +53,7 @@ function App() {
               <Nav.Link href="https://www.mtu.edu/computing/cclc/" target="_blank">Schedule</Nav.Link>
               <Nav.Link href="https://cslc.mtu.edu/" target="_blank">Our Website</Nav.Link>
               <Nav.Link href="#login" onClick={() => handleNavClick('login')}>Coach Login</Nav.Link>
-              <Nav.Link href="#queue">Queue</Nav.Link>
+              <Nav.Link href="#queue" onClick={() => handleNavClick('queue')}>Queue</Nav.Link>
               {/* add more links here */}
             </Nav>
           </Navbar.Collapse>
