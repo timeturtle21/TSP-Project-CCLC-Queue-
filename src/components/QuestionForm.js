@@ -4,8 +4,14 @@ import Button from 'react-bootstrap/Button';
 import './QuestionForm.css';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import axios from 'axios';
 
-
+/*
+since frontend and backend are in different places their might be CORS errors
+(Cross-orign resource sharing)
+must run npm install cors
+     run mbom install axios
+*/
 
 const QuestionForm = () => {
     const [formData, setFormData] = useState({
@@ -28,6 +34,19 @@ const QuestionForm = () => {
         const newQuestion = { questionText, questionType, relevantCourse };
         alert('Question submitted successfully!');
         console.log('Submitted Question:', newQuestion);
+
+        try {
+            //TODO: change URL to match backend endpoint
+            const response = await axios.post('http://localhost:3000/backend endpoint?', {
+                questionText,
+                questionType,
+                relevantCourse
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+
         // You can store the newQuestion in an array or perform any other actions here
         setFormData({
             questionText: '',
