@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
 
+//reads from database
 var base = new Airtable({apiKey:'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'}).base('apptCHdO2VgXDv2wL');
 const questionQueue = [];
 base('CCLCQueue').select({
@@ -36,6 +37,7 @@ function QueueView() {
                         <th>Questions</th>
                         <th>Type</th>
                         <th>Class</th>
+                        <th></th>
                     </tr>
                         {questionQueue.map((item) => {
                         const { question, type, className } = parseData(item);
@@ -44,10 +46,16 @@ function QueueView() {
                                 <td>{question}</td>
                                 <td>{type}</td>
                                 <td>{className}</td>
+                                <td>
+                                    <input type="checkbox"/>
+                                </td>
                             </tr>
                         );
                         })}
                 </table>
+            </div>
+            <div className="delete-container">
+                <button>Delete</button>
             </div>
         </div>
     );
