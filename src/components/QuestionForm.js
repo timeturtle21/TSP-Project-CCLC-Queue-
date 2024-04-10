@@ -1,10 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Airtable from 'airtable';
 import './QuestionForm.css';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+
+// Airtable.configure({
+//     endpointUrl: 'https://api.airtable.com',
+//     apiKey: 'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'
+// });
+var base = new Airtable({apiKey:'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'}).base('apptCHdO2VgXDv2wL');
 
 
 const QuestionForm = () => {
