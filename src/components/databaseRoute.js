@@ -17,7 +17,7 @@ app.post('/submit-question-place', (req, res) => {
     const { questionText, questionType, relevantCourse } = req.body;
     
     //format submission data as one string
-    const submission = `Question: ${questionText}\nType: ${questionType}\nRelevant Course: ${relevantCourse}\n`;
+    const submission = `${questionText}|${questionType}|${relevantCourse}\n`;
 
     //append submission data to 'database.txt'
     fs.appendFile('src/components/database.txt', submission, (err) => {
