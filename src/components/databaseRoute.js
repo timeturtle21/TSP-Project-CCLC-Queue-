@@ -16,17 +16,35 @@ app.post('/submit-question-place', (req, res) => {
     //extract submitted form data from the request body
     const { questionText, questionType, relevantCourse } = req.body;
     
-    //format submission data as one string
-    const submission = `${questionText}|${questionType}|${relevantCourse}\n`;
+    //format submission data as CSV row
+    const submission = `"${questionText}","${questionType}","${relevantCourse}"\n`;
+    // Check if the file exists
+    fs.access('src/components/database.csv', fs.constants.F_OK, (err) => {
+        if (err) {
+            // If file doesn't exist, add CSV headers
+            fs.writeFile('src/components/database.csv', 'Question,Type,Relevant Course\n', (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Failed to create database file');
+                }
+                appendToCSV(submission, res);
+            });
+        } else {
+            // If file exists, directly append data
+            appendToCSV(submission, res);
+        }
+    });
+});
 
-    //append submission data to 'database.txt'
-    fs.appendFile('src/components/database.txt', submission, (err) => {
+// Function to append data to CSV file
+function appendToCSV(data, res) {
+    fs.appendFile('src/components/database.csv', data, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Failed to save to database');
         }
-        res.send('database received question data');
+        res.send('Database received question data');
     });
-});
+}
 
 app.listen(PORT, () => console.log(`The port running is ${PORT}`));
