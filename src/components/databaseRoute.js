@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 //use cords for all routing
 app.use(cors());
@@ -20,7 +20,7 @@ app.post('/submit-question-place', (req, res) => {
     const submission = `Question: ${questionText}\nType: ${questionType}\nRelevant Course: ${relevantCourse}\n`;
 
     //append submission data to 'database.txt'
-    fs.appendFile('database.txt', submission, (err) => {
+    fs.appendFile('src/components/database.txt', submission, (err) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Failed to save to database');

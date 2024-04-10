@@ -28,7 +28,7 @@ const QuestionForm = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const { questionText, questionType, relevantCourse } = formData;
         const newQuestion = { questionText, questionType, relevantCourse };
@@ -37,7 +37,7 @@ const QuestionForm = () => {
 
         try {
             //TODO: change URL to match backend endpoint
-            const response = await axios.post('http://localhost:3000/backend endpoint?', {
+            const response = await axios.post('http://localhost:3001/submit-question-place', {
                 questionText,
                 questionType,
                 relevantCourse
