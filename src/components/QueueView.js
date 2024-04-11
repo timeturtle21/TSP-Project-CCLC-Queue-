@@ -9,19 +9,6 @@ import { useState, useEffect } from 'react';
 
 //reads from database
 var base = new Airtable({apiKey:'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'}).base('apptCHdO2VgXDv2wL');
-// base('CCLCQueue').select({
-//     view: 'Grid view'
-// }).firstPage(function(err, records) {
-//     if (err) { console.error(err); return; }
-//     records.forEach(function(record) {
-//         const questionText = record.get('QuestionText');
-//         const questionType = record.get('QuestionType');
-//         const course = record.get('Course');
-//         const question = questionText + '|' + questionType + '|' + course;
-//         questionQueue.push(question);
-//     });
-// });
-
 function QueueView() {
     const [questions, setQuestions] = useState([]);
 
@@ -56,7 +43,6 @@ function QueueView() {
         idsToDelete.forEach(id => {
             base('CCLCQueue').destroy(id, (err, record) => {
                 if (err) { console.error(err); return; }
-                console.log(`Deleted record ${record.id}`);
             });
         });
         setQuestions(questions.filter(q => !q.isSelected));
