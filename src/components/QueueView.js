@@ -9,24 +9,57 @@ import { useState, useEffect } from 'react';
 
 //reads from database
 var base = new Airtable({apiKey:'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'}).base('apptCHdO2VgXDv2wL');
-const questionQueue = [];
-base('CCLCQueue').select({
-    view: 'Grid view'
-}).firstPage(function(err, records) {
-    if (err) { console.error(err); return; }
-    records.forEach(function(record) {
-        const questionText = record.get('QuestionText');
-        const questionType = record.get('QuestionType');
-        const course = record.get('Course');
-        const question = questionText + '|' + questionType + '|' + course;
-        questionQueue.push(question);
-    });
-});
+// base('CCLCQueue').select({
+//     view: 'Grid view'
+// }).firstPage(function(err, records) {
+//     if (err) { console.error(err); return; }
+//     records.forEach(function(record) {
+//         const questionText = record.get('QuestionText');
+//         const questionType = record.get('QuestionType');
+//         const course = record.get('Course');
+//         const question = questionText + '|' + questionType + '|' + course;
+//         questionQueue.push(question);
+//     });
+// });
 
 function QueueView() {
-    const parseData = (question) => {
-        const parts = question.split('|');
-        return { question: parts[0], type: parts[1], className: parts[2] };
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+        base('CCLCQueue').select({
+            view: 'Grid view'
+        }).firstPage((err, records) => {
+            if (err) { console.error(err); return; }
+            const questionList = records.map(record => ({
+                id: record.id,
+                questionText: record.get('QuestionText'),
+                type: record.get('QuestionType'),
+                className: record.get('Course'),
+                isSelected: false
+            }));
+            setQuestions(questionList);
+        });
+    }, []);
+
+    const handleCheckboxChange = (id) => {
+        const updatedQuestions = questions.map(q => {
+            if (q.id === id) {
+                return {...q, isSelected: !q.isSelected};
+            }
+            return q;
+        });
+        setQuestions(updatedQuestions);
+    };
+
+    const handleDelete = () => {
+        const idsToDelete = questions.filter(q => q.isSelected).map(q => q.id);
+        idsToDelete.forEach(id => {
+            base('CCLCQueue').destroy(id, (err, record) => {
+                if (err) { console.error(err); return; }
+                console.log(`Deleted record ${record.id}`);
+            });
+        });
+        setQuestions(questions.filter(q => !q.isSelected));
     };
 
     return (
@@ -39,23 +72,20 @@ function QueueView() {
                         <th>Class</th>
                         <th></th>
                     </tr>
-                        {questionQueue.map((item) => {
-                        const { question, type, className } = parseData(item);
-                        return (
-                            <tr>
-                                <td>{question}</td>
+                    {questions.map(({ id, questionText, type, className, isSelected }) => (
+                            <tr key={id}>
+                                <td>{questionText}</td>
                                 <td>{type}</td>
                                 <td>{className}</td>
                                 <td>
-                                    <input type="checkbox"/>
+                                    <input type="checkbox" checked={isSelected} onChange={() => handleCheckboxChange(id)}/>
                                 </td>
                             </tr>
-                        );
-                        })}
+                        ))}
                 </table>
             </div>
             <div className="delete-container">
-                <button>Delete</button>
+                <button onClick={handleDelete}>Delete</button>
             </div>
         </div>
     );
