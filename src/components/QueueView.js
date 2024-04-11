@@ -1,207 +1,97 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
-import { useState, useEffect } from 'react';
-
-const question1 = "???|Programming|CS 1111";
-const question2 = "???|Theory|CS 1131";
-const question3 = "Test| Question|Programming|CS 1234";
-const question4 = "Test |Question|2|Theory|CS 1111";
-const questions = [ question1, question2, question3, question4 ]
-
-let deleteList = [];
-
-let loggedIn = true;
-
-class setLoggedIn {
-    constructor(loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-}
-
-let tableData = questions.map((question) =>
-    (
-        processQuestion(question)
-    )
-);
-
-function processQuestion(question) {
-    if (question == null)
-        return;
-
-    if (question.split("|").length > 3)
-        {
-            
-            let questionText = "";
-            for (let i = 0; i < question.split("|").length - 3; i++){
-                questionText += question.split("|")[i];
-                questionText += "|";
-            }
-            questionText += question.split("|")[question.split("|").length - 3];
-
-            if (loggedIn === true)
-            {
-                return (
-                    <tr>
-                        <td>{questionText}</td>
-                        <td>{question.split("|")[question.split("|").length - 2]}</td>
-                        <td>{question.split("|")[question.split("|").length - 1]}</td>
-                        {
-                            <Form.Check.Input
-                            type={"checkbox"}
-                            defaultChecked={false}
-                            onClick={(e) => {
-                              handleChange(e, question);
-                            }}
-                          />
-                        }
-                    </tr>
-                )
-            }
-            else
-            {
-                return (
-                    <tr>
-                        <td>{questionText}</td>
-                        <td>{question.split("|")[question.split("|").length - 2]}</td>
-                        <td>{question.split("|")[question.split("|").length - 1]}</td>
-                    </tr>
-                )
-            }
-        }
-        else
-        {
-            if (loggedIn === true)
-            {
-                return (
-                    <tr>
-                        <td>{question.split("|")[0]}</td>
-                        <td>{question.split("|")[1]}</td>
-                        <td>{question.split("|")[2]}</td>
-                        {
-                            <Form.Check.Input
-                            type={"checkbox"}
-                            defaultChecked={false}
-                            onClick={(e) => {
-                              handleChange(e, question);
-                            }}
-                          />
-                        }
-                    </tr>
-                )
-            }
-            else
-            {
-                return (
-                    <tr>
-                        <td>{question.split("|")[0]}</td>
-                        <td>{question.split("|")[1]}</td>
-                        <td>{question.split("|")[2]}</td>
-                    </tr>
-                )
-            }
-        }
-}
-
-const handleChange = (event, question) =>
-{
-    if (event.target.checked)
-        addToList(question);
-    else
-       removeFromList(question); 
-}
-const addToList = (question) =>
-{
-    const index = questions.indexOf(question);
-
-    deleteList.forEach(i => {
-        if (i === index)
-            return;
-    });
-
-    deleteList = [...deleteList, index];
-}
-const removeFromList = (question) =>
-{
-    const index = questions.indexOf(question);
-
-    deleteList = [
-        ...deleteList.slice(0, index), // Elements before the one to delete
-        ...deleteList.slice(index + 1) // Elements after the one to delete
-      ];
-}
-
-const deleteConfirmed = () =>
-{
-    deleteList.forEach(i => {
-        questions[i] = null;    //Temporary solution
-    });
-
-    //update();
-}
-
-/*
-function update()
-{
-    const [updating, setUpdate] = useState(false);
-    setUpdate(true);
-    setUpdate(false);
-}
-*/
+import Button from 'react-bootstrap/Button';
 
 const QueueView = () => {
-    if (loggedIn === true)
-    {
-        return(
-            <div>
-                <header className="App-header">
-                    <h1>Current Questions</h1>
-                    
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Type</th>
-                                <th>Class</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tableData}
-                        </tbody>
-                    </Table>
+    const [questions, setQuestions] = useState([]);
+    const [deleteList, setDeleteList] = useState([]);
+    const [loggedIn, setLoggedIn] = useState(true);
+
+    useEffect(() => {
+        setLoggedIn(false);
+        const getQuestions = async () => {
+            try {
+                const response = await axios.get('http://localhost:3001/get-csv-data');
+                setQuestions(csvStringToArray(response.data));
+            } catch(error) {
+                console.error('Error fetching CSV data:', error);
+            }
+        };
+        
+        getQuestions();
+    }, []);
+
     
-                    <Button variant="warning" onClick={deleteConfirmed}>Confirm Selected</Button>
-                               
-                </header>
-            </div>
-        );
-    }
-    else
-    {
-        return(
-            <div>
-                <header className="App-header">
-                    <h1>Current Questions</h1>
-                    
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Type</th>
-                                <th>Class</th>
+
+    const csvStringToArray = (csvString) => {
+        if (!csvString || typeof csvString !== 'string') {
+            console.error('Invalid CSV string.');
+            return [];
+        }
+        
+        // Split the CSV string into an array of rows
+        const rows = csvString.trim().split('\n');
+        // Exclude the first row (headers) from the result
+        const dataRows = rows.slice(1);
+        const result = [];
+
+        for (let i = 0; i < dataRows.length; i++) {
+            // Split the row into an array of values, handling quoted fields
+            const values = dataRows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g); //fixes shitty inputs
+            // Remove quotation marks from each value
+            const cleanValues = values.map(value => value.replace(/^"|"$/g, ''));
+            result.push(cleanValues);
+        }
+        
+        return result;
+    };
+
+    const handleChange = (event, index) => {
+        if (event.target.checked) {
+            setDeleteList([...deleteList, index]);
+        } else {
+            setDeleteList(deleteList.filter(i => i !== index));
+        }
+    };
+
+    const deleteConfirmed = () => {
+    };
+
+    return (
+        <div>
+            <header className="App-header">
+                <h1>Current Questions</h1>
+                
+                <Table striped bordered hover size="sm">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Type</th>
+                            <th>Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {questions.map((row, index) => (
+                            <tr key={index}>
+                                {row.map((cell, cellIndex) => (
+                                    <td key={cellIndex}>{cell}</td>
+                                ))}
+                                {loggedIn && (
+                                    <td>
+                                        <input type="checkbox" onChange={(e) => handleChange(e, index)} />
+                                    </td>
+                                )}
                             </tr>
-                        </thead>
-                        <tbody>
-                            {tableData}
-                        </tbody>
-                    </Table>
+                        ))}
+                    </tbody>
+                </Table>
+
+                <Button variant="warning" onClick={deleteConfirmed}>Confirm Selected</Button>
                                
-                </header>
-            </div>
-        );
-    }
+            </header>
+        </div>
+    );
 };
 
 export default QueueView;

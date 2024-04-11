@@ -47,4 +47,15 @@ function appendToCSV(data, res) {
     });
 }
 
+// Endpoint to retrieve CSV data
+app.get('/get-csv-data', (req, res) => {
+    fs.readFile('src/components/database.csv', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Failed to read database file');
+        }
+        res.send(data);
+    });
+});
+
 app.listen(PORT, () => console.log(`The port running is ${PORT}`));
