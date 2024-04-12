@@ -15,8 +15,11 @@ function QueueView() {
     useEffect(() => {
         base('CCLCQueue').select({
             view: 'Grid view'
-        }).firstPage((err, records) => {
-            if (err) { console.error(err); return; }
+        }).firstPage((error, records) => {
+            if (error) { 
+                alert("An error occured: " + error); 
+                return; 
+            }
             const questionList = records.map(record => ({
                 id: record.id,
                 questionText: record.get('QuestionText'),
@@ -41,8 +44,11 @@ function QueueView() {
     const handleDelete = () => {
         const idsToDelete = questions.filter(q => q.isSelected).map(q => q.id);
         idsToDelete.forEach(id => {
-            base('CCLCQueue').destroy(id, (err, record) => {
-                if (err) { console.error(err); return; }
+            base('CCLCQueue').destroy(id, (error, record) => {
+                if (error) {
+                    alert("An error occured: " + error);
+                    return; 
+                }
             });
         });
         setQuestions(questions.filter(q => !q.isSelected));

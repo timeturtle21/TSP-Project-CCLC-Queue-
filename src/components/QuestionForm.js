@@ -41,10 +41,9 @@ const QuestionForm = () => {
                     Course: relevantCourse
                 }
             }
-        ], function(err) {
-            if (err) {
-                console.error(err);
-                alert('Error submitting question' + err.message);
+        ], function(error) {
+            if (error) {
+                alert('Error submitting question' + error.message);
                 return;
             }
             alert('Question submitted successfully!');
