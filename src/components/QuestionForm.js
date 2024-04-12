@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 
-var base = new Airtable({apiKey:'pataHBiNAHkqRtjq9.8c3789c03d409b5ae01156d584301599ecd3308377132fb4f965a1336cddacb6'}).base('apptCHdO2VgXDv2wL');
+var base = new Airtable({apiKey:'patgVxgZqPS3SgUow.0d397c1968ab9a7b7e3d80aa10f5263497029732e59a134c89110d54240d1b6b'}).base('appiBfiFO2XY0tDPc');
 
 
 const QuestionForm = () => {
@@ -26,7 +26,6 @@ const QuestionForm = () => {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
         const { questionText, questionType, relevantCourse } = formData;
 
         if (!questionText.trim() || !questionType || !relevantCourse) {
