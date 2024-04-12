@@ -7,11 +7,11 @@ import Nav from 'react-bootstrap/Nav';
 import LoginPage from './components/LoginPage';
 import QuestionForm from './components/QuestionForm';
 import QueueView from './components/QueueView';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState();
 
 
   const [expanded, setExpanded] = useState(false);
@@ -24,20 +24,30 @@ function App() {
   const renderPage = (currentPage) => {
     switch (currentPage) {
       case 'home':
+        localStorage.setItem('page','home');
         return <QuestionForm />;
       case 'login':
+        localStorage.setItem('page','login');   //set page value in local storage to help with refresh
         return <LoginPage />;
       case 'queue':
+        localStorage.setItem('page','queue');
         return <QueueView />;
       default:
-        return (
-          <header className="App-header">
-            <h1>Welcome to the CCLC!</h1>
-            <Button variant="warning">Submit a question</Button>
-          </header>
-        );
+        return;
     }
   };
+
+  //load correct page on refresh hook
+  useEffect(
+    () => {
+      if(localStorage.getItem('page') == null){
+        handleNavClick('home');
+      } else {
+        handleNavClick(localStorage.getItem('page'));
+      }
+    },
+    []
+  );
 
   return (
 
