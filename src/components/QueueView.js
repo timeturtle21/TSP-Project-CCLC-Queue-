@@ -1,207 +1,86 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
+import Airtable from 'airtable';
+import './QueueView.css';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
 
-const question1 = "???|Programming|CS 1111";
-const question2 = "???|Theory|CS 1131";
-const question3 = "Test| Question|Programming|CS 1234";
-const question4 = "Test |Question|2|Theory|CS 1111";
-const questions = [ question1, question2, question3, question4 ]
+//reads from database
+var base = new Airtable({apiKey:'patgVxgZqPS3SgUow.0d397c1968ab9a7b7e3d80aa10f5263497029732e59a134c89110d54240d1b6b'}).base('appiBfiFO2XY0tDPc');
+function QueueView() {
+    const [questions, setQuestions] = useState([]);
 
-let deleteList = [];
-
-let loggedIn = true;
-
-class setLoggedIn {
-    constructor(loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-}
-
-let tableData = questions.map((question) =>
-    (
-        processQuestion(question)
-    )
-);
-
-function processQuestion(question) {
-    if (question == null)
-        return;
-
-    if (question.split("|").length > 3)
-        {
-            
-            let questionText = "";
-            for (let i = 0; i < question.split("|").length - 3; i++){
-                questionText += question.split("|")[i];
-                questionText += "|";
+    useEffect(() => {
+        base('CCLCQueue').select({
+            view: 'Grid view'
+        }).firstPage((error, records) => {
+            if (error) { 
+                alert("An error occured: " + error); 
+                return; 
             }
-            questionText += question.split("|")[question.split("|").length - 3];
+            const questionList = records.map(record => ({
+                id: record.id,
+                questionText: record.get('QuestionText'),
+                type: record.get('QuestionType'),
+                className: record.get('Course'),
+                isSelected: false
+            }));
+            setQuestions(questionList);
+        });
+    }, []);
 
-            if (loggedIn === true)
-            {
-                return (
+    const handleCheckboxChange = (id) => {
+        const updatedQuestions = questions.map(q => {
+            if (q.id === id) {
+                return {...q, isSelected: !q.isSelected};
+            }
+            return q;
+        });
+        setQuestions(updatedQuestions);
+    };
+
+    const handleDelete = () => {
+        const idsToDelete = questions.filter(q => q.isSelected).map(q => q.id);
+        idsToDelete.forEach(id => {
+            base('CCLCQueue').destroy(id, (error, record) => {
+                if (error) {
+                    alert("An error occured: " + error);
+                    return; 
+                }
+            });
+        });
+        setQuestions(questions.filter(q => !q.isSelected));
+    };
+
+    return (
+        <div className = "QueueView">
+            <div className = "table-container">
+                <table>
                     <tr>
-                        <td>{questionText}</td>
-                        <td>{question.split("|")[question.split("|").length - 2]}</td>
-                        <td>{question.split("|")[question.split("|").length - 1]}</td>
-                        {
-                            <Form.Check.Input
-                            type={"checkbox"}
-                            defaultChecked={false}
-                            onClick={(e) => {
-                              handleChange(e, question);
-                            }}
-                          />
-                        }
+                        <th>Questions</th>
+                        <th>Type</th>
+                        <th>Class</th>
+                        <th></th>
                     </tr>
-                )
-            }
-            else
-            {
-                return (
-                    <tr>
-                        <td>{questionText}</td>
-                        <td>{question.split("|")[question.split("|").length - 2]}</td>
-                        <td>{question.split("|")[question.split("|").length - 1]}</td>
-                    </tr>
-                )
-            }
-        }
-        else
-        {
-            if (loggedIn === true)
-            {
-                return (
-                    <tr>
-                        <td>{question.split("|")[0]}</td>
-                        <td>{question.split("|")[1]}</td>
-                        <td>{question.split("|")[2]}</td>
-                        {
-                            <Form.Check.Input
-                            type={"checkbox"}
-                            defaultChecked={false}
-                            onClick={(e) => {
-                              handleChange(e, question);
-                            }}
-                          />
-                        }
-                    </tr>
-                )
-            }
-            else
-            {
-                return (
-                    <tr>
-                        <td>{question.split("|")[0]}</td>
-                        <td>{question.split("|")[1]}</td>
-                        <td>{question.split("|")[2]}</td>
-                    </tr>
-                )
-            }
-        }
-}
-
-const handleChange = (event, question) =>
-{
-    if (event.target.checked)
-        addToList(question);
-    else
-       removeFromList(question); 
-}
-const addToList = (question) =>
-{
-    const index = questions.indexOf(question);
-
-    deleteList.forEach(i => {
-        if (i === index)
-            return;
-    });
-
-    deleteList = [...deleteList, index];
-}
-const removeFromList = (question) =>
-{
-    const index = questions.indexOf(question);
-
-    deleteList = [
-        ...deleteList.slice(0, index), // Elements before the one to delete
-        ...deleteList.slice(index + 1) // Elements after the one to delete
-      ];
-}
-
-const deleteConfirmed = () =>
-{
-    deleteList.forEach(i => {
-        questions[i] = null;    //Temporary solution
-    });
-
-    //update();
-}
-
-/*
-function update()
-{
-    const [updating, setUpdate] = useState(false);
-    setUpdate(true);
-    setUpdate(false);
-}
-*/
-
-const QueueView = () => {
-    if (loggedIn === true)
-    {
-        return(
-            <div>
-                <header className="App-header">
-                    <h1>Current Questions</h1>
-                    
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Type</th>
-                                <th>Class</th>
+                    {questions.map(({ id, questionText, type, className, isSelected }) => (
+                            <tr key={id}>
+                                <td>{questionText}</td>
+                                <td>{type}</td>
+                                <td>{className}</td>
+                                <td>
+                                    <input type="checkbox" checked={isSelected} onChange={() => handleCheckboxChange(id)}/>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {tableData}
-                        </tbody>
-                    </Table>
-    
-                    <Button variant="warning" onClick={deleteConfirmed}>Confirm Selected</Button>
-                               
-                </header>
+                        ))}
+                </table>
             </div>
-        );
-    }
-    else
-    {
-        return(
-            <div>
-                <header className="App-header">
-                    <h1>Current Questions</h1>
-                    
-                    <Table striped bordered hover size="sm">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Type</th>
-                                <th>Class</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tableData}
-                        </tbody>
-                    </Table>
-                               
-                </header>
+            <div className="delete-container">
+                <button onClick={handleDelete}>Delete</button>
             </div>
-        );
-    }
-};
+        </div>
+    );
+}
 
 export default QueueView;
