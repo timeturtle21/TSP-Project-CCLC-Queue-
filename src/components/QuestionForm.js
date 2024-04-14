@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Airtable from 'airtable';
 import './QuestionForm.css';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 
 var base = new Airtable({apiKey:'patgVxgZqPS3SgUow.0d397c1968ab9a7b7e3d80aa10f5263497029732e59a134c89110d54240d1b6b'}).base('appiBfiFO2XY0tDPc');
