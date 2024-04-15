@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import axios from 'axios';
-
-import setLoggedIn from './QueueView';
+import useLogin from '../hooks/useLogin.js';
 
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
 const [ profile, setProfile ] = useState(null);
+const [ loggedIn, setLoggedIn ] = useLogin();
 const coaches = ['msmille3@mtu.edu', 'kmstrick@mtu.edu','clbuchan@mtu.edu','jsmultan@mtu.edu', 'tjkalkma@mtu.edu', 'jadreger@mtu.edu', 'ambaird@mtu.edu' ];
 
 const login = useGoogleLogin({
@@ -16,7 +16,10 @@ const login = useGoogleLogin({
     localStorage.setItem('user', JSON.stringify(codeResponse));
     setLoggedIn(true);
   },
-  onError: (error) => console.log('Login Failed:', error)
+  onError: (error) => {
+    console.log('Login Failed:', error)
+    setLoggedIn(false);
+  }
 });
 const logOut = () => {
   googleLogout();

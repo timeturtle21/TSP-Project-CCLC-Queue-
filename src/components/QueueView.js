@@ -1,16 +1,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
 import React from 'react';
 import Airtable from 'airtable';
 import './QueueView.css';
-import Table from 'react-bootstrap/Table';
-import Form from 'react-bootstrap/Form';
 import { useState, useEffect } from 'react';
+import useLogin from '../hooks/useLogin.js'
 
 //reads from database
 var base = new Airtable({apiKey:'patgVxgZqPS3SgUow.0d397c1968ab9a7b7e3d80aa10f5263497029732e59a134c89110d54240d1b6b'}).base('appiBfiFO2XY0tDPc');
 function QueueView() {
     const [questions, setQuestions] = useState([]);
+    const [loggedIn] = useLogin();
 
     useEffect(() => {
         base('CCLCQueue').select({
@@ -62,23 +61,29 @@ function QueueView() {
                         <th>Questions</th>
                         <th>Type</th>
                         <th>Class</th>
+                        {loggedIn ? 
                         <th></th>
+                        : null}
                     </tr>
                     {questions.map(({ id, questionText, type, className, isSelected }) => (
                             <tr key={id}>
                                 <td>{questionText}</td>
                                 <td>{type}</td>
                                 <td>{className}</td>
+                                {loggedIn ?
                                 <td>
                                     <input type="checkbox" checked={isSelected} onChange={() => handleCheckboxChange(id)}/>
                                 </td>
+                                : null}
                             </tr>
                         ))}
                 </table>
             </div>
+            {loggedIn ?
             <div className="delete-container">
                 <button onClick={handleDelete}>Delete</button>
             </div>
+            : null}
         </div>
     );
 }
