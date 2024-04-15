@@ -20,6 +20,10 @@ function App() {
     setCurrentPage(page);
     setExpanded(false);
   };
+  //Removed button functionality for CCLC Queue in nav bar
+  const handle_CCLC_button = (event) => {
+    event.preventDefault();
+  };
 
   const renderPage = (currentPage) => {
     switch (currentPage) {
@@ -54,8 +58,7 @@ function App() {
     <div className="App"> 
       <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
         <Container>
-
-          <Navbar.Brand href="#home" onClick={() => handleNavClick('home')} className="m-eauto">CCLC Queue</Navbar.Brand>
+          <Navbar.Brand href="#home" onClick={handle_CCLC_button}>CCLC Queue</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="m-eauto">
