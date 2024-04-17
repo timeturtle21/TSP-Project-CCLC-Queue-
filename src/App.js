@@ -20,6 +20,10 @@ function App() {
     setCurrentPage(page);
     setExpanded(false);
   };
+  //Removed button functionality for CCLC Queue in nav bar
+  const handle_CCLC_button = (event) => {
+    event.preventDefault();
+  };
 
   const renderPage = (currentPage) => {
     switch (currentPage) {
