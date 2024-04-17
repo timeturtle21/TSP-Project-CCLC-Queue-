@@ -55,6 +55,7 @@ function App() {
       <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
         <Container>
 
+          <Navbar.Brand onClick={() => handleNavClick('home')}> <img src="favicon.ico" alt="MTU Logo"  width={40} height={50} /> </Navbar.Brand>
           <Navbar.Brand href="#home" onClick={() => handleNavClick('home')} className="m-eauto">CCLC Queue</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setExpanded(!expanded)} />
           <Navbar.Collapse id="basic-navbar-nav">
