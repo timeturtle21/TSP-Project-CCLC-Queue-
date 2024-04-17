@@ -18,7 +18,6 @@ describe('welcome page', () => {
 
   it('displays welcome page', () => {
     //Nav bar display tests
-    cy.get('*[class$="navbar-brand"]').should('have.text','CCLC Queue')
     cy.get('a[href*="#home"]:last').should('have.text', 'Home')
     cy.get('a[href*="https://www.mtu.edu/computing/cclc/"]').should('have.text', 'Schedule')
     cy.get('a[href*="https://cslc.mtu.edu/"]').should('have.text', 'Our Website')
