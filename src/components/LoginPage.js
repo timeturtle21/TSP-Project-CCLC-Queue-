@@ -14,7 +14,7 @@ const login = useGoogleLogin({
   onSuccess: (codeResponse) => {
     setUser(codeResponse)
     localStorage.setItem('user', JSON.stringify(codeResponse));
-    setLoggedIn(true);
+    
   },
   onError: (error) => {
     console.log('Login Failed:', error)
@@ -42,6 +42,7 @@ useEffect(
         if(coaches.includes(res.data.email)){
           setProfile(res.data);
           localStorage.setItem('profile', JSON.stringify(res.data));
+          setLoggedIn(true);
         }
         else{
           logOut(); //fail
