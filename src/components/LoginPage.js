@@ -7,14 +7,13 @@ import useLogin from '../hooks/useLogin.js';
 function AppLogin() {
 const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')) || {});
 const [ profile, setProfile ] = useState(null);
-const [ loggedIn, setLoggedIn ] = useLogin();
+const [ loggedIn, setLoggedIn ] = useLogin(false);
 const coaches = ['msmille3@mtu.edu', 'kmstrick@mtu.edu','clbuchan@mtu.edu','jsmultan@mtu.edu', 'tjkalkma@mtu.edu', 'jadreger@mtu.edu', 'ambaird@mtu.edu' ];
 
 const login = useGoogleLogin({
   onSuccess: (codeResponse) => {
     setUser(codeResponse)
     localStorage.setItem('user', JSON.stringify(codeResponse));
-    
   },
   onError: (error) => {
     console.log('Login Failed:', error)
