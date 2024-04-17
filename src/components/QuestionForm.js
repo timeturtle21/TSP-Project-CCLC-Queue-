@@ -63,6 +63,7 @@ const QuestionForm = () => {
                     id="questionText"
                     placeholder="Enter Question"
                     value={formData.questionText}
+                    style={{width: "600px"}}
                     onChange={handleChange}
                 />
                 <label htmlFor="questionType">Type of Question</label>
