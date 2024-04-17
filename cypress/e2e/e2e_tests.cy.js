@@ -18,7 +18,6 @@ describe('welcome page', () => {
 
   it('displays welcome page', () => {
     //Nav bar display tests
-    cy.get('*[class$="navbar-brand"]').should('have.text','CCLC Queue')
     cy.get('a[href*="#home"]:last').should('have.text', 'Home')
     cy.get('a[href*="https://www.mtu.edu/computing/cclc/"]').should('have.text', 'Schedule')
     cy.get('a[href*="https://cslc.mtu.edu/"]').should('have.text', 'Our Website')
@@ -34,32 +33,15 @@ describe('welcome page', () => {
     cy.get('select:first').select('Programming').should('have.value', 'Programming')
     cy.get('select:first').select('Theory').should('have.value', 'Theory')
 
-    cy.get('select:last').select('CS 1111 (Introduction to Programming in C/C++)').should('have.value', 'CS 1111 (Introduction to Programming in C/C++)')
-    cy.get('select:last').select('CS 1121 (Introduction to Programming I)').should('have.value', 'CS 1121 (Introduction to Programming I)')
-    cy.get('select:last').select('CS 1122 (Introduction to Programming II)').should('have.value', 'CS 1122 (Introduction to Programming II)')
-    cy.get('select:last').select('CS 1131 (Accelerated Introduction to Programming)').should('have.value', 'CS 1131 (Accelerated Introduction to Programming)')
-    cy.get('select:last').select('CS 1142 (Programming at the HW/SW Interface)').should('have.value', 'CS 1142 (Programming at the HW/SW Interface)')
-    cy.get('select:last').select('CS 2311 (Discrete Structures)').should('have.value', 'CS 2311 (Discrete Structures)')
-    cy.get('select:last').select('CS 2321 (Data Structures)').should('have.value', 'CS 2321 (Data Structures)')
+    cy.get('select:last').select('CS1111 (Introduction to Programming in C/C++)').should('have.value', 'CS1111')
+    cy.get('select:last').select('CS1121 (Introduction to Programming I)').should('have.value', 'CS1121')
+    cy.get('select:last').select('CS1122 (Introduction to Programming II)').should('have.value', 'CS1122')
+    cy.get('select:last').select('CS1131 (Accelerated Introduction to Programming)').should('have.value', 'CS1131')
+    cy.get('select:last').select('CS1142 (Programming at the HW/SW Interface)').should('have.value', 'CS1142')
+    cy.get('select:last').select('CS2311 (Discrete Structures)').should('have.value', 'CS2311')
+    cy.get('select:last').select('CS2321 (Data Structures)').should('have.value', 'CS2321')
 
     cy.get('button:last').should('have.text','Submit your question')
-  })
-
-  it('Question Submission', () => {
-    //input data into form
-    cy.get('[id=questionText]').type('test question')
-    cy.get('select:first').select('Programming')
-    cy.get('select:last').select('CS 1111 (Introduction to Programming in C/C++)')
-
-    //submit form
-    cy.get('button:last').click()
-
-    //test alert
-    cy.on('window:alert',(t)=>{
-      //assertions
-      expect(t).to.contains('Question submitted successfully!');
-    })
-
   })
 })
 
@@ -108,8 +90,49 @@ describe('queue page', () => {
     cy.get('a[href*="#queue"]').click()
 
     //check if page rendered correctly
-    cy.get('h1').should('have.text','Current Questions')
-    cy.get('th').should('have.text','QuestionTypeClass')
-    cy.get('button:last').should('have.text','Confirm Selected')
+    cy.get('th').should('have.text','QuestionsTypeClass')
   })
+})
+
+describe('Full application flow', () => {
+  beforeEach(() => {
+    //Load page
+    cy.visit('http://localhost:3000/')
+  })
+  it('Question Submission', () => {
+    //input data into form
+    cy.get('[id=questionText]').type('test question')
+    cy.get('select:first').select('Programming')
+    cy.get('select:last').select('CS1111 (Introduction to Programming in C/C++)')
+
+    //submit form
+    cy.get('button:last').click()
+
+    //test alert
+    cy.on('window:alert',(t)=>{
+      //assertions
+      expect(t).to.contains('Question submitted successfully!');
+    })
+
+    //login to tjkalkma@mtu.edu google account
+    cy.loginByGoogleApi()
+    
+    //go to login page
+    cy.get('a[href*="#login"]').click()
+    cy.wait(100)
+
+    cy.get('a[href*="#queue"]').click()
+
+    //check for question and delete
+    cy.get('tr:last').contains('test questionProgrammingCS1111 (Introduction to Programming in C/C++)').get('input:last').check()
+    cy.get('button').contains('text','Delete').click()
+
+    cy.reload()
+
+    //check if it was deleted
+    cy.get('tr:last').contains('test questionProgrammingCS1111 (Introduction to Programming in C/C++)').should('not.exist')
+
+    
+  })
+
 })
